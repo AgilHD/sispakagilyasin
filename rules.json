@@ -22,14 +22,7 @@
       {"kode": "G20", "nama": "Mengalami halusinasi", "cf_pakar": 0.4},
       {"kode": "G21", "nama": "Merasa tidak aman", "cf_pakar": 0.4},
       {"kode": "G22", "nama": "Merasa sedang diawasi", "cf_pakar": 0.4},
-      {"kode": "G23", "nama": "Merasa tidak berharga", "cf_pakar": 0.8},
-      {"kode": "G24", "nama": "Kesulitan konsentrasi", "cf_pakar": 0.7},
-      {"kode": "G25", "nama": "Kehilangan minat pada aktivitas", "cf_pakar": 0.8},
-      {"kode": "G26", "nama": "Perubahan pola tidur", "cf_pakar": 0.6},
-      {"kode": "G27", "nama": "Perubahan berat badan drastis", "cf_pakar": 0.7},
-      {"kode": "G28", "nama": "Merasa lelah berlebihan", "cf_pakar": 0.6},
-      {"kode": "G29", "nama": "Merasa putus asa", "cf_pakar": 0.9},
-      {"kode": "G30", "nama": "Pikiran bunuh diri berulang", "cf_pakar": 0.9}
+      {"kode": "G23", "nama": "Merasa tidak berharga", "cf_pakar": 0.8}
     ],
 
     "penyakit": [
@@ -110,12 +103,6 @@
         "jika": ["D2", "D4"],
         "maka": "K2",
         "cf_rule": 0.7
-      },
-      {
-        "id": "R12",
-        "jika": ["G2", "G3", "G4", "G24", "G25"],
-        "maka": "D1",
-        "cf_rule": 0.9
       }
     ]
   }
