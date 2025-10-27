@@ -1,6 +1,6 @@
 {
     "gejala": [
-      {"kode": "G1", "nama": "Sebelum siklus menstruasi", "cf_pakar": 0.8},
+      {"kode": "G1", "nama": "Sebelum siklus menstruasi", "cf_pakar": -0.8},
       {"kode": "G2", "nama": "Tidak ada nafsu makan", "cf_pakar": 0.8},
       {"kode": "G3", "nama": "Cenderung menyendiri", "cf_pakar": 0.8},
       {"kode": "G4", "nama": "Insomnia (susah tidur)", "cf_pakar": 0.8},
@@ -26,9 +26,9 @@
     ],
 
     "penyakit": [
-      {"kode": "D1", "nama": "Depresi Endogen"},
+      {"kode": "D1", "nama": "Depresi Vegetatif"},
       {"kode": "D2", "nama": "Depresi Agitasi"},
-      {"kode": "D3", "nama": "Depresi Neurotik"},
+      {"kode": "D3", "nama": "Depresi Distimia"},
       {"kode": "D4", "nama": "Depresi Psikotik"}
     ],
 

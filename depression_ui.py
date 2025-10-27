@@ -45,6 +45,52 @@ class DepressionDiagnosisUI:
         left_frame = tk.Frame(main_frame, bg='#ecf0f1', relief='raised', bd=2)
         left_frame.pack(side='left', fill='both', expand=True, padx=(0, 5))
         
+        # CF Legend
+        legend_frame = tk.Frame(left_frame, bg='#ecf0f1', relief='raised', bd=1)
+        legend_frame.pack(fill='x', padx=5, pady=5)
+        
+        legend_title = tk.Label(legend_frame, text="🎯 TINGKAT KEYAKINAN GEJALA", 
+                               font=('Arial', 11, 'bold'), bg='#ecf0f1', fg='#2c3e50')
+        legend_title.pack(pady=8)
+        
+        # Keyakinan indicators in a more attractive layout
+        indicators_frame = tk.Frame(legend_frame, bg='#ecf0f1')
+        indicators_frame.pack(fill='x', padx=10, pady=5)
+        
+        # 5 Level indicators - simplified
+        level_frame = tk.Frame(indicators_frame, bg='#ecf0f1')
+        level_frame.pack(fill='x', expand=True)
+        
+        # Level 1: Pasti Ada
+        level1_frame = tk.Frame(level_frame, bg='#ecf0f1')
+        level1_frame.pack(side='left', fill='x', expand=True)
+        tk.Label(level1_frame, text="✅ Pasti Ada", font=('Arial', 9, 'bold'), bg='#ecf0f1', fg='#27ae60').pack()
+        tk.Label(level1_frame, text="(CF: 0.8)", font=('Arial', 8), bg='#ecf0f1', fg='#27ae60').pack()
+        
+        # Level 2: Mungkin Ada
+        level2_frame = tk.Frame(level_frame, bg='#ecf0f1')
+        level2_frame.pack(side='left', fill='x', expand=True)
+        tk.Label(level2_frame, text="🟡 Mungkin Ada", font=('Arial', 9, 'bold'), bg='#ecf0f1', fg='#f39c12').pack()
+        tk.Label(level2_frame, text="(CF: 0.4)", font=('Arial', 8), bg='#ecf0f1', fg='#f39c12').pack()
+        
+        # Level 3: Tidak Tahu
+        level3_frame = tk.Frame(level_frame, bg='#ecf0f1')
+        level3_frame.pack(side='left', fill='x', expand=True)
+        tk.Label(level3_frame, text="❓ Tidak Tahu", font=('Arial', 9, 'bold'), bg='#ecf0f1', fg='#95a5a6').pack()
+        tk.Label(level3_frame, text="(CF: 0.0)", font=('Arial', 8), bg='#ecf0f1', fg='#95a5a6').pack()
+        
+        # Level 4: Mungkin Tidak
+        level4_frame = tk.Frame(level_frame, bg='#ecf0f1')
+        level4_frame.pack(side='left', fill='x', expand=True)
+        tk.Label(level4_frame, text="🟠 Mungkin Tidak", font=('Arial', 9, 'bold'), bg='#ecf0f1', fg='#e67e22').pack()
+        tk.Label(level4_frame, text="(CF: -0.4)", font=('Arial', 8), bg='#ecf0f1', fg='#e67e22').pack()
+        
+        # Level 5: Pasti Tidak
+        level5_frame = tk.Frame(level_frame, bg='#ecf0f1')
+        level5_frame.pack(side='left', fill='x', expand=True)
+        tk.Label(level5_frame, text="❌ Pasti Tidak", font=('Arial', 9, 'bold'), bg='#ecf0f1', fg='#e74c3c').pack()
+        tk.Label(level5_frame, text="(CF: -0.8)", font=('Arial', 8), bg='#ecf0f1', fg='#e74c3c').pack()
+        
         # Gejala selection
         gejala_label = tk.Label(left_frame, text="PILIH GEJALA YANG DIALAMI", 
                                font=('Arial', 12, 'bold'), bg='#ecf0f1')
@@ -154,23 +200,78 @@ class DepressionDiagnosisUI:
                                  font=('Arial', 8), fg='#7f8c8d', bg='#ecf0f1', anchor='w')
             code_label.pack(fill='x')
             
-            # Confidence level input
-            conf_frame = tk.Frame(symptom_frame, bg='#ecf0f1')
-            conf_frame.pack(side='right', padx=5, pady=5)
+            # Confidence level input with radio buttons (1-5 levels)
+            conf_frame = tk.Frame(symptom_frame, bg='#ecf0f1', relief='groove', bd=2)
+            conf_frame.pack(side='right', padx=8, pady=8)
             
-            conf_label = tk.Label(conf_frame, text="CF:", font=('Arial', 8), bg='#ecf0f1')
-            conf_label.pack(side='left')
+            # Title
+            conf_title = tk.Label(conf_frame, text="Tingkat Keyakinan:", 
+                                 font=('Arial', 8, 'bold'), bg='#ecf0f1', fg='#2c3e50')
+            conf_title.pack(pady=(5, 3))
             
-            conf_var = tk.DoubleVar(value=1.0)
-            conf_spinbox = tk.Spinbox(conf_frame, from_=0.0, to=1.0, increment=0.1, 
-                                    textvariable=conf_var, width=5, font=('Arial', 8))
-            conf_spinbox.pack(side='left')
+            # Radio buttons for 5 levels
+            conf_var = tk.IntVar(value=1)  # Default to level 1 (Pasti Ada)
+            
+            # Level 1: Pasti Ada (0.6-1.0)
+            level1 = tk.Radiobutton(conf_frame, text="✅ Pasti Ada", 
+                                  variable=conf_var, value=1, 
+                                  font=('Arial', 8), bg='#ecf0f1', fg='#27ae60',
+                                  command=lambda: self.update_cf_from_radio(gejala['kode'], gejala['nama'], 1))
+            level1.pack(anchor='w', pady=1)
+            
+            # Level 2: Mungkin Ada (0.2-0.6)
+            level2 = tk.Radiobutton(conf_frame, text="🟡 Mungkin Ada", 
+                                  variable=conf_var, value=2, 
+                                  font=('Arial', 8), bg='#ecf0f1', fg='#f39c12',
+                                  command=lambda: self.update_cf_from_radio(gejala['kode'], gejala['nama'], 2))
+            level2.pack(anchor='w', pady=1)
+            
+            # Level 3: Tidak Tahu (-0.2-0.2)
+            level3 = tk.Radiobutton(conf_frame, text="❓ Tidak Tahu", 
+                                  variable=conf_var, value=3, 
+                                  font=('Arial', 8), bg='#ecf0f1', fg='#95a5a6',
+                                  command=lambda: self.update_cf_from_radio(gejala['kode'], gejala['nama'], 3))
+            level3.pack(anchor='w', pady=1)
+            
+            # Level 4: Mungkin Tidak (-0.6--0.2)
+            level4 = tk.Radiobutton(conf_frame, text="🟠 Mungkin Tidak", 
+                                  variable=conf_var, value=4, 
+                                  font=('Arial', 8), bg='#ecf0f1', fg='#e67e22',
+                                  command=lambda: self.update_cf_from_radio(gejala['kode'], gejala['nama'], 4))
+            level4.pack(anchor='w', pady=1)
+            
+            # Level 5: Pasti Tidak (-1.0--0.6)
+            level5 = tk.Radiobutton(conf_frame, text="❌ Pasti Tidak", 
+                                  variable=conf_var, value=5, 
+                                  font=('Arial', 8), bg='#ecf0f1', fg='#e74c3c',
+                                  command=lambda: self.update_cf_from_radio(gejala['kode'], gejala['nama'], 5))
+            level5.pack(anchor='w', pady=1)
             
             # Store references
             symptom_frame.var = var
             symptom_frame.conf_var = conf_var
             symptom_frame.kode = gejala['kode']
             symptom_frame.nama = gejala['nama']
+    
+    def update_cf_from_radio(self, kode, nama, level):
+        """
+        Update CF value dari radio button selection
+        """
+        # Mapping level ke CF value - maksimal 0.8
+        if level == 1:  # Pasti Ada
+            cf_value = 0.8  # Maksimal CF yang bisa dipilih
+        elif level == 2:  # Mungkin Ada
+            cf_value = 0.4  # Representasi tengah dari range 0.2-0.6
+        elif level == 3:  # Tidak Tahu
+            cf_value = 0.0  # Representasi tengah dari range -0.2-0.2
+        elif level == 4:  # Mungkin Tidak
+            cf_value = -0.4  # Representasi tengah dari range -0.6--0.2
+        else:  # Pasti Tidak
+            cf_value = -0.8  # Representasi tengah dari range -1.0--0.6
+        
+        # Update gejala yang dipilih jika sudah dipilih
+        if kode in self.selected_symptoms:
+            self.update_symptom_cf(kode, cf_value)
     
     def set_gender(self):
         """
@@ -179,6 +280,56 @@ class DepressionDiagnosisUI:
         self.gender = self.gender_var.get()
         self.system.set_gender(self.gender)
         print(f"Gender dipilih: {self.gender}")
+    
+    def update_cf_indicator_and_symptom(self, value, kode, nama):
+        """
+        Update CF indicator dan gejala yang dipilih
+        """
+        cf_value = float(value)
+        
+        # Update CF indicator
+        self.update_cf_indicator(value, kode, nama)
+        
+        # Update gejala yang dipilih jika sudah dipilih
+        if kode in self.selected_symptoms:
+            self.update_symptom_cf(kode, cf_value)
+    
+    def update_cf_indicator(self, value, kode, nama):
+        """
+        Update CF indicator berdasarkan nilai slider - 5 level simplified
+        """
+        cf_value = float(value)
+        
+        # Mapping CF value ke 5 level linguistic terms (tanpa angka)
+        if cf_value >= 0.6:
+            text = "Pasti Ada"
+            color = "#27ae60"  # Green
+        elif cf_value >= 0.2:
+            text = "Mungkin Ada"
+            color = "#f39c12"  # Orange
+        elif cf_value >= -0.2:
+            text = "Tidak Tahu"
+            color = "#95a5a6"  # Gray
+        elif cf_value >= -0.6:
+            text = "Mungkin Tidak"
+            color = "#e67e22"  # Dark orange
+        else:
+            text = "Pasti Tidak"
+            color = "#e74c3c"  # Red
+        
+        # Update indicator label
+        for widget in self.root.winfo_children():
+            self._update_cf_indicator_recursive(widget, kode, text, color)
+    
+    def _update_cf_indicator_recursive(self, widget, kode, text, color):
+        """
+        Helper function to update CF indicator recursively
+        """
+        if hasattr(widget, 'kode') and widget.kode == kode and hasattr(widget, 'cf_indicator'):
+            widget.cf_indicator.config(text=text, fg=color)
+        
+        for child in widget.winfo_children():
+            self._update_cf_indicator_recursive(child, kode, text, color)
     
     def toggle_symptom(self, var, kode, nama):
         """
@@ -193,9 +344,21 @@ class DepressionDiagnosisUI:
                     break
             
             if parent and hasattr(parent, 'conf_var'):
-                conf_value = parent.conf_var.get()
+                # Get the selected radio button level
+                level = parent.conf_var.get()
+                # Convert level to CF value - maksimal 0.8
+                if level == 1:  # Pasti Ada
+                    conf_value = 0.8  # Maksimal CF yang bisa dipilih
+                elif level == 2:  # Mungkin Ada
+                    conf_value = 0.4
+                elif level == 3:  # Tidak Tahu
+                    conf_value = 0.0
+                elif level == 4:  # Mungkin Tidak
+                    conf_value = -0.4
+                else:  # Pasti Tidak
+                    conf_value = -0.8
             else:
-                conf_value = 1.0  # Default confidence
+                conf_value = 0.8  # Default to Pasti Ada (maksimal)
                 
             self.selected_symptoms[kode] = {
                 'nama': nama,
@@ -206,6 +369,14 @@ class DepressionDiagnosisUI:
             if kode in self.selected_symptoms:
                 del self.selected_symptoms[kode]
                 self.update_selected_list()
+    
+    def update_symptom_cf(self, kode, cf_value):
+        """
+        Update CF value for selected symptom
+        """
+        if kode in self.selected_symptoms:
+            self.selected_symptoms[kode]['cf'] = cf_value
+            self.update_selected_list()
     
     def _find_parent_with_var(self, widget, target_var):
         """
