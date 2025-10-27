@@ -1,0 +1,134 @@
+{
+    "gejala": [
+      {"kode": "G1", "nama": "Sebelum siklus menstruasi", "cf_pakar": -0.8},
+      {"kode": "G2", "nama": "Tidak ada nafsu makan", "cf_pakar": 0.8},
+      {"kode": "G3", "nama": "Cenderung menyendiri", "cf_pakar": 0.8},
+      {"kode": "G4", "nama": "Insomnia (susah tidur)", "cf_pakar": 0.8},
+      {"kode": "G5", "nama": "Merasa gelisah", "cf_pakar": 0.8},
+      {"kode": "G6", "nama": "Memutar atau meremas tangan", "cf_pakar": 0.4},
+      {"kode": "G7", "nama": "Berbicara tidak nyambung", "cf_pakar": -0.6},
+      {"kode": "G8", "nama": "Tidak dapat merasakan emosi kesedihan", "cf_pakar": 0.8},
+      {"kode": "G9", "nama": "Merasa sangat bersalah", "cf_pakar": 0.8},
+      {"kode": "G10", "nama": "Ingin bunuh diri", "cf_pakar": 1.0},
+      {"kode": "G11", "nama": "Kehilangan siklus menstruasi", "cf_pakar": 0.4},
+      {"kode": "G12", "nama": "Perubahan kepribadian", "cf_pakar": 0.4},
+      {"kode": "G13", "nama": "Wajah terlihat murung", "cf_pakar": 0.8},
+      {"kode": "G14", "nama": "Pasif", "cf_pakar": 0.8},
+      {"kode": "G15", "nama": "Merasa curiga", "cf_pakar": 0.6},
+      {"kode": "G16", "nama": "Suka mengkritik", "cf_pakar": -0.4},
+      {"kode": "G17", "nama": "Penuh pikiran negatif", "cf_pakar": 0.8},
+      {"kode": "G18", "nama": "Ketakutan berlebihan akan menjadi gila", "cf_pakar": 0.8},
+      {"kode": "G19", "nama": "Mengalami delusi (khayalan)", "cf_pakar": 0.4},
+      {"kode": "G20", "nama": "Mengalami halusinasi", "cf_pakar": 0.4},
+      {"kode": "G21", "nama": "Merasa tidak aman", "cf_pakar": 0.4},
+      {"kode": "G22", "nama": "Merasa sedang diawasi", "cf_pakar": 0.4},
+      {"kode": "G23", "nama": "Merasa tidak berharga", "cf_pakar": 0.8},
+      {"kode": "G24", "nama": "Kesulitan konsentrasi", "cf_pakar": 0.7},
+      {"kode": "G25", "nama": "Kehilangan minat pada aktivitas", "cf_pakar": 0.8},
+      {"kode": "G26", "nama": "Perubahan pola tidur", "cf_pakar": 0.6},
+      {"kode": "G27", "nama": "Perubahan berat badan drastis", "cf_pakar": 0.7},
+      {"kode": "G28", "nama": "Merasa lelah berlebihan", "cf_pakar": 0.6},
+      {"kode": "G29", "nama": "Merasa putus asa", "cf_pakar": 0.9},
+      {"kode": "G30", "nama": "Pikiran bunuh diri berulang", "cf_pakar": 0.9}
+    ],
+
+    "penyakit": [
+      {"kode": "D1", "nama": "Depresi Endogen"},
+      {"kode": "D2", "nama": "Depresi Agitasi"},
+      {"kode": "D3", "nama": "Depresi Neurotik"},
+      {"kode": "D4", "nama": "Depresi Psikotik"},
+      {"kode": "D5", "nama": "Depresi Mayor"},
+      {"kode": "D6", "nama": "Depresi Ringan"},
+      {"kode": "D7", "nama": "Depresi Berat"}
+    ],
+
+    "komplikasi": [
+      {"kode": "K1", "nama": "Gangguan Kecemasan"},
+      {"kode": "K2", "nama": "Gangguan Tidur Kronis"},
+      {"kode": "K3", "nama": "Gangguan Makan"},
+      {"kode": "K4", "nama": "Penyalahgunaan Zat"},
+      {"kode": "K5", "nama": "Risiko Bunuh Diri Tinggi"}
+    ],
+
+    "aturan": [
+      {
+        "id": "R1",
+        "jika": ["G2", "G3", "G4"],
+        "maka": "D1",
+        "cf_rule": 0.8
+      },
+      {
+        "id": "R2",
+        "jika": ["G2", "G5", "G6", "G7", "G8", "G9", "G10"],
+        "maka": "D2",
+        "cf_rule": 0.9
+      },
+      {
+        "id": "R3",
+        "jika": ["G12", "G13", "G14", "G15", "G16", "G17", "G18"],
+        "maka": "D3",
+        "cf_rule": 0.8
+      },
+      {
+        "id": "R4",
+        "jika": ["G19", "G20", "G21", "G22", "G23"],
+        "maka": "D4",
+        "cf_rule": 0.8
+      },
+      {
+        "id": "R5",
+        "jika": ["G24", "G25", "G26", "G27", "G28"],
+        "maka": "D5",
+        "cf_rule": 0.85
+      },
+      {
+        "id": "R6",
+        "jika": ["G2", "G3", "G13", "G17"],
+        "maka": "D6",
+        "cf_rule": 0.7
+      },
+      {
+        "id": "R7",
+        "jika": ["G9", "G10", "G29", "G30"],
+        "maka": "D7",
+        "cf_rule": 0.95
+      },
+      {
+        "id": "R8",
+        "jika": ["D1", "D3"],
+        "maka": "K1",
+        "cf_rule": 0.6
+      },
+      {
+        "id": "R9",
+        "jika": ["D2", "D4"],
+        "maka": "K2",
+        "cf_rule": 0.7
+      },
+      {
+        "id": "R10",
+        "jika": ["D5", "D7"],
+        "maka": "K3",
+        "cf_rule": 0.8
+      },
+      {
+        "id": "R11",
+        "jika": ["D7"],
+        "maka": "K5",
+        "cf_rule": 0.9
+      },
+      {
+        "id": "R12",
+        "jika": ["G2", "G3", "G4", "G24", "G25"],
+        "maka": "D1",
+        "cf_rule": 0.9
+      },
+      {
+        "id": "R13",
+        "jika": ["G2", "G3", "G4", "G24", "G25"],
+        "maka": "D5",
+        "cf_rule": 0.8
+      }
+    ]
+  }
+  
