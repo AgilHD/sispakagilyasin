@@ -1,6 +1,6 @@
 {
     "gejala": [
-      {"kode": "G1", "nama": "Sebelum siklus menstruasi", "cf_pakar": -0.8},
+      {"kode": "G1", "nama": "Sebelum siklus menstruasi", "cf_pakar": 0.8},
       {"kode": "G2", "nama": "Tidak ada nafsu makan", "cf_pakar": 0.8},
       {"kode": "G3", "nama": "Cenderung menyendiri", "cf_pakar": 0.8},
       {"kode": "G4", "nama": "Insomnia (susah tidur)", "cf_pakar": 0.8},
@@ -36,63 +36,69 @@
       {"kode": "D1", "nama": "Depresi Endogen"},
       {"kode": "D2", "nama": "Depresi Agitasi"},
       {"kode": "D3", "nama": "Depresi Neurotik"},
-      {"kode": "D4", "nama": "Depresi Psikotik"},
-      {"kode": "D5", "nama": "Depresi Mayor"},
-      {"kode": "D6", "nama": "Depresi Ringan"},
-      {"kode": "D7", "nama": "Depresi Berat"}
+      {"kode": "D4", "nama": "Depresi Psikotik"}
     ],
 
     "komplikasi": [
       {"kode": "K1", "nama": "Gangguan Kecemasan"},
-      {"kode": "K2", "nama": "Gangguan Tidur Kronis"},
-      {"kode": "K3", "nama": "Gangguan Makan"},
-      {"kode": "K4", "nama": "Penyalahgunaan Zat"},
-      {"kode": "K5", "nama": "Risiko Bunuh Diri Tinggi"}
+      {"kode": "K2", "nama": "Gangguan Tidur Kronis"}
     ],
 
-    "aturan": [
+    "aturan_pria": [
       {
-        "id": "R1",
+        "id": "R1_P",
         "jika": ["G2", "G3", "G4"],
         "maka": "D1",
         "cf_rule": 0.8
       },
       {
-        "id": "R2",
+        "id": "R2_P",
         "jika": ["G2", "G5", "G6", "G7", "G8", "G9", "G10"],
         "maka": "D2",
         "cf_rule": 0.9
       },
       {
-        "id": "R3",
+        "id": "R3_P",
         "jika": ["G12", "G13", "G14", "G15", "G16", "G17", "G18"],
         "maka": "D3",
         "cf_rule": 0.8
       },
       {
-        "id": "R4",
+        "id": "R4_P",
         "jika": ["G19", "G20", "G21", "G22", "G23"],
         "maka": "D4",
         "cf_rule": 0.8
+      }
+    ],
+
+    "aturan_wanita": [
+      {
+        "id": "R1_W",
+        "jika": ["G1", "G2", "G3", "G4"],
+        "maka": "D1",
+        "cf_rule": 0.8
       },
       {
-        "id": "R5",
-        "jika": ["G24", "G25", "G26", "G27", "G28"],
-        "maka": "D5",
-        "cf_rule": 0.85
+        "id": "R2_W",
+        "jika": ["G2", "G5", "G6", "G7", "G8", "G9", "G10", "G11"],
+        "maka": "D2",
+        "cf_rule": 0.9
       },
       {
-        "id": "R6",
-        "jika": ["G2", "G3", "G13", "G17"],
-        "maka": "D6",
-        "cf_rule": 0.7
+        "id": "R3_W",
+        "jika": ["G1", "G11", "G12", "G13", "G14", "G15", "G16", "G17", "G18"],
+        "maka": "D3",
+        "cf_rule": 0.8
       },
       {
-        "id": "R7",
-        "jika": ["G9", "G10", "G29", "G30"],
-        "maka": "D7",
-        "cf_rule": 0.95
-      },
+        "id": "R4_W",
+        "jika": ["G19", "G20", "G21", "G22", "G23"],
+        "maka": "D4",
+        "cf_rule": 0.8
+      }
+    ],
+
+    "aturan": [
       {
         "id": "R8",
         "jika": ["D1", "D3"],
@@ -106,28 +112,10 @@
         "cf_rule": 0.7
       },
       {
-        "id": "R10",
-        "jika": ["D5", "D7"],
-        "maka": "K3",
-        "cf_rule": 0.8
-      },
-      {
-        "id": "R11",
-        "jika": ["D7"],
-        "maka": "K5",
-        "cf_rule": 0.9
-      },
-      {
         "id": "R12",
         "jika": ["G2", "G3", "G4", "G24", "G25"],
         "maka": "D1",
         "cf_rule": 0.9
-      },
-      {
-        "id": "R13",
-        "jika": ["G2", "G3", "G4", "G24", "G25"],
-        "maka": "D5",
-        "cf_rule": 0.8
       }
     ]
   }

@@ -15,6 +15,7 @@ class DepressionDiagnosisUI:
         
         # Variabel untuk menyimpan gejala yang dipilih
         self.selected_symptoms = {}
+        self.gender = None
         
         # Setup UI
         self.setup_ui()
@@ -79,6 +80,23 @@ class DepressionDiagnosisUI:
         
         self.selected_listbox = tk.Listbox(right_frame, height=8, font=('Arial', 9))
         self.selected_listbox.pack(fill='x', padx=10, pady=5)
+        
+        # Gender selection
+        gender_frame = tk.Frame(right_frame, bg='#ecf0f1')
+        gender_frame.pack(fill='x', padx=10, pady=5)
+        
+        gender_label = tk.Label(gender_frame, text="GENDER PASIEN:", 
+                               font=('Arial', 10, 'bold'), bg='#ecf0f1')
+        gender_label.pack(side='left', padx=(0, 10))
+        
+        self.gender_var = tk.StringVar()
+        gender_pria = tk.Radiobutton(gender_frame, text="Pria", variable=self.gender_var, 
+                                   value="pria", command=self.set_gender, bg='#ecf0f1')
+        gender_pria.pack(side='left', padx=5)
+        
+        gender_wanita = tk.Radiobutton(gender_frame, text="Wanita", variable=self.gender_var, 
+                                     value="wanita", command=self.set_gender, bg='#ecf0f1')
+        gender_wanita.pack(side='left', padx=5)
         
         # Control buttons
         button_frame = tk.Frame(right_frame, bg='#ecf0f1')
@@ -154,14 +172,31 @@ class DepressionDiagnosisUI:
             symptom_frame.kode = gejala['kode']
             symptom_frame.nama = gejala['nama']
     
+    def set_gender(self):
+        """
+        Set gender pasien
+        """
+        self.gender = self.gender_var.get()
+        self.system.set_gender(self.gender)
+        print(f"Gender dipilih: {self.gender}")
+    
     def toggle_symptom(self, var, kode, nama):
         """
         Toggle gejala selection
         """
         if var.get():
-            # Get confidence value from the spinbox
-            parent = var.master
-            conf_value = parent.conf_var.get()
+            # Find the parent frame that contains this var
+            parent = None
+            for widget in self.root.winfo_children():
+                parent = self._find_parent_with_var(widget, var)
+                if parent:
+                    break
+            
+            if parent and hasattr(parent, 'conf_var'):
+                conf_value = parent.conf_var.get()
+            else:
+                conf_value = 1.0  # Default confidence
+                
             self.selected_symptoms[kode] = {
                 'nama': nama,
                 'cf': conf_value
@@ -171,6 +206,20 @@ class DepressionDiagnosisUI:
             if kode in self.selected_symptoms:
                 del self.selected_symptoms[kode]
                 self.update_selected_list()
+    
+    def _find_parent_with_var(self, widget, target_var):
+        """
+        Helper function to find parent widget that contains the target var
+        """
+        if hasattr(widget, 'var') and widget.var == target_var:
+            return widget
+        
+        for child in widget.winfo_children():
+            result = self._find_parent_with_var(child, target_var)
+            if result:
+                return result
+        
+        return None
     
     def update_selected_list(self):
         """
@@ -188,11 +237,18 @@ class DepressionDiagnosisUI:
             messagebox.showwarning("Peringatan", "Pilih minimal satu gejala untuk diagnosa!")
             return
         
+        if not self.gender:
+            messagebox.showwarning("Peringatan", "Pilih gender pasien terlebih dahulu!")
+            return
+        
         # Clear previous results
         self.results_text.delete(1.0, tk.END)
         
         # Reset system
         self.system.reset_system()
+        
+        # Set gender
+        self.system.set_gender(self.gender)
         
         # Add selected symptoms to system
         for kode, info in self.selected_symptoms.items():
@@ -200,6 +256,7 @@ class DepressionDiagnosisUI:
         
         # Run forward chaining
         self.results_text.insert(tk.END, "=== PROSES DIAGNOSA ===\n\n")
+        self.results_text.insert(tk.END, f"Gender: {self.gender.upper()}\n")
         self.results_text.insert(tk.END, f"Gejala yang dimasukkan: {len(self.selected_symptoms)}\n")
         for kode, info in self.selected_symptoms.items():
             self.results_text.insert(tk.END, f"- {kode}: {info['nama']} (CF: {info['cf']})\n")
@@ -278,6 +335,8 @@ class DepressionDiagnosisUI:
         Clear semua pilihan gejala
         """
         self.selected_symptoms.clear()
+        self.gender = None
+        self.gender_var.set("")
         self.update_selected_list()
         self.results_text.delete(1.0, tk.END)
         

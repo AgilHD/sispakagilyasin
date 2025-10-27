@@ -11,6 +11,7 @@ class DepressionExpertSystem:
         self.knowledge_base = self.load_knowledge_base()
         self.facts = {}  # Menyimpan fakta yang diketahui
         self.conclusions = {}  # Menyimpan kesimpulan dengan CF
+        self.gender = None  # Menyimpan gender pasien
         
     def load_knowledge_base(self) -> Dict:
         """
@@ -26,6 +27,20 @@ class DepressionExpertSystem:
             print(f"Error parsing JSON file {self.rules_file}")
             return {}
     
+    def set_gender(self, gender: str):
+        """
+        Set gender pasien (pria/wanita)
+        """
+        if gender.lower() in ['pria', 'laki-laki', 'male', 'p']:
+            self.gender = 'pria'
+        elif gender.lower() in ['wanita', 'perempuan', 'female', 'w']:
+            self.gender = 'wanita'
+        else:
+            print("Gender tidak valid! Gunakan 'pria' atau 'wanita'")
+            return False
+        print(f"Gender pasien: {self.gender}")
+        return True
+
     def add_fact(self, gejala_kode: str, cf_user: float = 1.0):
         """
         Menambahkan fakta gejala dengan tingkat keyakinan user
@@ -121,8 +136,21 @@ class DepressionExpertSystem:
         # Reset kesimpulan
         self.conclusions = {}
         
-        # Dapatkan semua aturan
-        rules = self.knowledge_base.get('aturan', [])
+        # Dapatkan aturan berdasarkan gender
+        if self.gender == 'pria':
+            rules = self.knowledge_base.get('aturan_pria', [])
+            print("Menggunakan aturan untuk Pria")
+        elif self.gender == 'wanita':
+            rules = self.knowledge_base.get('aturan_wanita', [])
+            print("Menggunakan aturan untuk Wanita")
+        else:
+            # Fallback ke aturan umum jika gender tidak diset
+            rules = self.knowledge_base.get('aturan', [])
+            print("Menggunakan aturan umum (gender tidak diset)")
+        
+        # Tambahkan aturan umum (komplikasi, dll)
+        general_rules = self.knowledge_base.get('aturan', [])
+        rules.extend(general_rules)
         
         # Proses aturan secara iteratif sampai tidak ada perubahan
         changed = True
@@ -255,6 +283,7 @@ class DepressionExpertSystem:
         """
         self.facts = {}
         self.conclusions = {}
+        self.gender = None
         print("Sistem telah direset. Siap untuk diagnosa baru.")
 
 def main():
@@ -281,15 +310,21 @@ def main():
         print("\n" + "="*40)
         print("MENU UTAMA")
         print("="*40)
-        print("1. Tambah gejala")
-        print("2. Lihat gejala yang sudah dimasukkan")
-        print("3. Jalankan diagnosa")
-        print("4. Reset sistem")
-        print("5. Keluar")
+        print("1. Set gender pasien")
+        print("2. Tambah gejala")
+        print("3. Lihat gejala yang sudah dimasukkan")
+        print("4. Jalankan diagnosa")
+        print("5. Reset sistem")
+        print("6. Keluar")
         
-        choice = input("\nPilih menu (1-5): ").strip()
+        choice = input("\nPilih menu (1-6): ").strip()
         
         if choice == '1':
+            print("\n--- SET GENDER PASIEN ---")
+            gender = input("Masukkan gender pasien (pria/wanita): ").strip()
+            system.set_gender(gender)
+        
+        elif choice == '2':
             print("\n--- TAMBAH GEJALA ---")
             print("Gejala yang tersedia:")
             
@@ -311,7 +346,7 @@ def main():
             except ValueError:
                 print("Input tidak valid!")
         
-        elif choice == '2':
+        elif choice == '3':
             print("\n--- GEJALA YANG SUDAH DIMASUKKAN ---")
             if system.facts:
                 for kode, cf in system.facts.items():
@@ -320,19 +355,23 @@ def main():
             else:
                 print("Belum ada gejala yang dimasukkan.")
         
-        elif choice == '3':
+        elif choice == '4':
             if not system.facts:
                 print("\nBelum ada gejala yang dimasukkan!")
+                continue
+            
+            if not system.gender:
+                print("\nBelum ada gender yang diset! Silakan set gender terlebih dahulu.")
                 continue
             
             print("\n--- MENJALANKAN DIAGNOSA ---")
             system.forward_chaining()
             system.print_diagnosis()
         
-        elif choice == '4':
+        elif choice == '5':
             system.reset_system()
         
-        elif choice == '5':
+        elif choice == '6':
             print("\nTerima kasih telah menggunakan sistem pakar diagnosa depresi!")
             break
         
